@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+<style>
+#yuck {
+	border: 1px solid #4C3B4D;
+}
+</style>
+	</head>
+	<body>
+	<center>
+		<br>
+		<canvas height="500" width="500" id="yuck"></canvas>
+		<button id="clear">Clear</button>
+
+		<script>
+var c = document.getElementById("yuck");
+var ctx = c.getContext("2d");
+
+ctx.fillStyle = "#6a107a";
+ctx.fillRect ( 40, 20, 50, 100);
+
+function getMousePos(canvas, evt) {
+	var rect = canvas.getBoundingClientRect();
+	return {
+		x: evt.offsetX,//clientX - rect.left,
+		y: evt.offsetY//clientY - rect.top
+	};
+};
+
+function clear(canvas){
+}
+
+function moveBlock(canvas, x, y) {
+	ctx.fillStyle = "#6a107a";
+	ctx.fillRect ( 40, 20, 50, 100);
+	ctx.fillStyle = "#a3ff00";
+	ctx.fillRect ( x, y, 30, 90);
+};
+
+c.addEventListener('mousedown', function(evt) {
+	var mousePos = getMousePos(c, evt);
+	moveBlock (c, mousePos.x , mousePos.y);
+}, false);
+
+var b = document.getElementById("clear");
+b.addEventListener('click', function(evt){
+ctx.clearRect(0, 0, c.width, c.height);
+});
+
+
+		</script>
+</center>
+	</body>
+</html>
