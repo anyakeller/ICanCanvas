@@ -49,6 +49,8 @@ c.addEventListener('mousedown', function(evt) {
     var mousePos = getMousePos(c, evt);
     ctx.lineTo(mousePos.x, mousePos.y);
     placeCirc (c, mousePos.x , mousePos.y);
+    ctx.moveTo(mousePos.x, mousePos.y);
+    ctx.fill();
     ctx.stroke();
 }, false);
 
