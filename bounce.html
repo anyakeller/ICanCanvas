@@ -96,7 +96,7 @@ var animate = function(){
             ycor = nextycor;
             requestID = window.requestAnimationFrame( drawDot );
         } else {
-            timeDown = (-1 * viy +  Math.sqrt((viy * viy) + 4 * ycor * g * .5)) / ( 2 * g * .5);
+            timeDown = (-1 * viy +  Math.sqrt((viy * viy) + 4 * ycor * g * .5)) / ( 2 * g * .5) - t;
             console.log("time down: " + timeDown);
             stopIt;
         };

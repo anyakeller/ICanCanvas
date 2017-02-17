@@ -25,6 +25,7 @@
             <canvas height="500" width="500" id="trail"></canvas>
             <canvas height="500" width="500" id="ball"></canvas>
             </div>
+            <button id="DVD">DVD</button>
             <button id="stop">Stop</button>
             <button id="clear">Clear</button>
 
@@ -155,7 +156,76 @@ var animate = function(){
     drawDot();
 };
 
-//anime
+//growCirc
+var growCirc = function(){
+    window.cancelAnimationFrame( requestID );
+    //init params
+    var maxr = 50;
+    var minr = 5;
+    var radius = 50;
+    var grow_shrink = 0; //1 grow 0 shrink
+    var drawDot = function(grow_shrink){
+        console.log(requestID);
+
+        ctx.clearRect(0, 0 , c.width, c.height);
+        ctx.beginPath();
+        ctx.arc(c.width/2, c.height/2, radius, 0 ,2 * Math.PI);
+        ctx.stroke();
+        ctx.fillStyle = "#a3ff00";
+        ctx.fill();
+        if (grow_shrink  == 1){
+            radius ++;
+            if (radius == maxr){
+                grow_shrink = 0;
+            };
+        } else {
+            radius --;
+            if (radius == minr){
+                grow_shrink = 1;
+            };
+        requestID = window.requestAnimationFrame( drawDot( grow_shrink ));
+    drawDot(radius, 1);
+        };
+    };
+};
+
+//dvd thing
+var dvd = function(){
+    window.cancelAnimationFrame( requestID );
+    //init params
+    var radius = 50;
+    var vy = 2;
+    var vx = 1;
+    var xcor = c.width/2;
+    var ycor = c.width/2;
+    var t = 1; // time of one step
+
+    var drawDot = function(){
+        console.log(requestID);
+
+        //ball
+        ctx.clearRect(0, 0 , c.width, c.height);
+        ctx.beginPath();
+        ctx.arc(xcor, ycor, radius, 0 ,2 * Math.PI);
+        ctx.stroke();
+        ctx.fillStyle = "#a3ff00";
+        ctx.fill();
+        xcor = xcor + vx * t;
+        ycor = ycor + vy * t;
+        if (xcor > c.width - radius || xcor < 0 + radius ){
+            xcor = xcor - vx * t;
+            vx = -1 * vx;
+            xcor = xcor + vx * t;
+        };
+        if (ycor > c.height - radius || ycor < 0 + radius){
+            ycor = ycor - vy * t;
+            vy = -1 * vy;
+            ycor = ycor + vy * t;
+        };
+        requestID = window.requestAnimationFrame( drawDot );
+    };
+    drawDot();
+};
 
 var stopIt = function(){
     console.log( requestID );
@@ -167,7 +237,8 @@ var stopIt = function(){
 c.addEventListener('mousedown', function(evt) {
     var mousePos = getMousePos(c, evt);
     //placeCirc (c, mousePos.x , mousePos.y);
-    animate();
+    //animate();
+    ///growCirc();
 }, false);
 
 var b = document.getElementById("clear");
@@ -183,6 +254,8 @@ b.addEventListener('click', function(evt){
 var s = document.getElementById("stop");
 s.addEventListener('click', stopIt);
 
+var d = document.getElementById("DVD");
+d.addEventListener('click', dvd);
 
             </script>
         </center>
