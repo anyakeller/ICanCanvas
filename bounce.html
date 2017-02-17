@@ -48,37 +48,6 @@ function getMousePos(canvas, evt) {
     };
 };
 
-function placeBlock(canvas, x, y) {
-    //	ctx.fillStyle = "#6a107a";
-    //	ctx.fillRect ( 40, 20, 50, 100);
-    ctx.fillStyle = "#a3ff00";
-    ctx.fillRect ( x - 15, y - 15, 0, 0);
-};
-
-function placeCirc(canvas, x, y) {
-    //	ctx.fillStyle = "#6a107a";
-    //	ctx.fillRect ( 40, 20, 50, 100);
-    ctx.lineTo(x, y);
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.fillStyle = "#a3ff00";
-    ctx.arc ( x , y , 20 , 0, 2*Math.PI);
-    ctx.fill();
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-};
-
-var putDot = function(){
-    var mousePos = getMousePos(c, evt);
-    ctx.beginPath();
-    ctx.fillStyle = "#a3ff00";
-    ctx.arc ( mousePos.x, mousePos.y , 20 , 0, 2*Math.PI);
-    ctx.fill();
-    ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(mousePos.x, mousePos.y);
-};
 var clear = function(e){
     e.preventDefault();
     ctx.cleawrRect(0,0,500,500);
@@ -88,17 +57,20 @@ var requestID;
 var animate = function(){
     window.cancelAnimationFrame( requestID );
     //init params
-    var radius = 50;
+    var radius = 25;
     var g = 9.81;
     var vx = 2;
-    var vy = 0;
+    var viy = 0; //initial velocity
+    var xicor = 50;
+    var yicor = 50;
     var xcor = 50;
     var ycor = 50;
-    var t = 1; // time of one step
+    var t = 0; // initial time
+    var dt = .1; // time of one step
     var efficiency = 1;
 
     var drawDot = function(){
-        console.log(requestID);
+        console.log(requestID + " : " + t);
 
         //trail
         trailctx.lineTo(xcor, ycor);
@@ -113,44 +85,21 @@ var animate = function(){
         ctx.stroke();
         ctx.fillStyle = "#a3ff00";
         ctx.fill();
-        var nextxcor = xcor + vx * t;
-        var nextycor = ycor + vy * t + g * .5 * Math.pow(t,2);
-        console.log(nextycor);
-        var nextvy = vy + g * t;
-        var tdown = 0;
-        var ttot = t;
-        while (nextycor + radius > c.height){
-            console.log("bounce");
-            if (c.height - (ycor + radius) != 0){
-                tdown = -1 * (-1 * vy + Math.sqrt(Math.pow(vy,2) - 4 * (c.height - (ycor + radius)) * g * .5))/ (2 * (c.height - (ycor + radius)));
-            } else {
-                tdown = (-1 * vy) / (g * .5);
-            };
-            console.log(ycor);
-            console.log(vy);
-            console.log(c.height - (ycor + radius));
-            console.log( Math.pow(vy,2));
-            console.log(4 * (c.height - (ycor + radius)) * g * .5);
-            console.log(tdown);
-            vy = -1 * (vy + g * tdown) * efficiency;
-            console.log(vy);
-            ycor = c.height - radius;
-            xcor = xcor + vx * (tdown);
-            trailctx.lineTo(xcor, ycor);
-            trailctx.stroke();
-            trailctx.beginPath();
-            trailctx.moveTo(xcor, ycor);
 
-            nextxcor = xcor + vx * (ttot - tdown);
-            nextycor = ycor + (vy * (ttot - tdown) + g * .5 * Math.pow(ttot - tdown,2));
-            nextvy = vy + g * (ttot - tdown);
-            ttot = ttot - tdown;
+        var nextt = t;
+        nextt += dt;
+        var nextxcor = xicor + vx * nextt;
+        var nextycor = yicor + viy * nextt + g * .5 * Math.pow(nextt,2);
+        if (nextycor + radius <= c.height){
+            t = nextt;
+            xcor = nextxcor;
+            ycor = nextycor;
+            requestID = window.requestAnimationFrame( drawDot );
+        } else {
+            timeDown = (-1 * viy +  Math.sqrt((viy * viy) + 4 * ycor * g * .5)) / ( 2 * g * .5);
+            console.log("time down: " + timeDown);
+            stopIt;
         };
-        xcor = nextxcor;
-        ycor = nextycor;
-        vy = nextvy;
-        console.log(vy);
-        requestID = window.requestAnimationFrame( drawDot );
     };
     drawDot();
 };
